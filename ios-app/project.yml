@@ -16,6 +16,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: tr.umitkalender.jarvis
         PRODUCT_NAME: Jarvis
+        PRODUCT_MODULE_NAME: JarvisMobile
         INFOPLIST_FILE: JarvisMobile/Info.plist
         CODE_SIGN_STYLE: Automatic
         TARGETED_DEVICE_FAMILY: "1,2"
