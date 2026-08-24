@@ -29,3 +29,7 @@ targets:
       - path: JarvisMobileTests
     dependencies:
       - target: JarvisMobile
+    settings:
+      base:
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Jarvis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Jarvis"
+        BUNDLE_LOADER: "$(TEST_HOST)"
