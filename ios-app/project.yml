@@ -1,0 +1,31 @@
+name: JarvisMobile
+options:
+  bundleIdPrefix: tr.umitkalender
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+targets:
+  JarvisMobile:
+    type: application
+    platform: iOS
+    sources:
+      - path: JarvisMobile
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: tr.umitkalender.jarvis
+        PRODUCT_NAME: Jarvis
+        INFOPLIST_FILE: JarvisMobile/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets:
+        - JarvisMobileTests
+  JarvisMobileTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: JarvisMobileTests
+    dependencies:
+      - target: JarvisMobile
