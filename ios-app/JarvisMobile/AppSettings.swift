@@ -14,7 +14,7 @@ final class AppSettings: ObservableObject {
 
     init() {
         dashboardURL = defaults.string(forKey: urlKey)
-            ?? "https://diving-appearance-amazing-measurement.trycloudflare.com"
+            ?? "https://jarvis.50-6-36-201.sslip.io"
         username = defaults.string(forKey: userKey) ?? "jarvis"
         password = KeychainStore.get(account: passwordAccount)
     }
