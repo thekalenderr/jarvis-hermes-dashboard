@@ -1,6 +1,16 @@
 import Foundation
 
 enum ConnectionSettings {
+    static let stableDashboardURL = "https://jarvis.50-6-36-201.sslip.io"
+
+    static func migratedDashboardURL(_ raw: String) -> String {
+        guard let host = URL(string: raw)?.host?.lowercased(),
+              host.hasSuffix(".trycloudflare.com") else {
+            return raw
+        }
+        return stableDashboardURL
+    }
+
     static func normalizedURL(_ raw: String) -> URL? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard var components = URLComponents(string: trimmed),
