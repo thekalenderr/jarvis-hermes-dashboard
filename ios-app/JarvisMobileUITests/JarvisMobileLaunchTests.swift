@@ -20,8 +20,8 @@ final class JarvisMobileLaunchTests: XCTestCase {
 
     func testCorrectCredentialsOpenLiveJarvisPanel() throws {
         let password = try XCTUnwrap(
-            ProcessInfo.processInfo.environment["JARVIS_TEST_PASSWORD"],
-            "CI must provide JARVIS_TEST_PASSWORD"
+            TestSecrets.password.isEmpty ? nil : TestSecrets.password,
+            "CI must generate TestSecrets.password"
         )
         let app = freshApp()
         let passwordField = app.secureTextFields["password"]

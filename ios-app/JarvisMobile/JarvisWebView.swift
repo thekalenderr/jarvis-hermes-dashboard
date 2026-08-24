@@ -22,7 +22,13 @@ struct JarvisWebView: UIViewRepresentable {
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.isOpaque = false
         webView.backgroundColor = .black
-        webView.load(URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData))
+        webView.load(
+            AuthenticatedRequestFactory.request(
+                url: url,
+                username: username,
+                password: password
+            )
+        )
         return webView
     }
 
@@ -30,7 +36,13 @@ struct JarvisWebView: UIViewRepresentable {
         context.coordinator.parent = self
         if context.coordinator.lastReloadToken != reloadToken {
             context.coordinator.lastReloadToken = reloadToken
-            webView.reloadFromOrigin()
+            webView.load(
+                AuthenticatedRequestFactory.request(
+                    url: url,
+                    username: username,
+                    password: password
+                )
+            )
         }
     }
 
