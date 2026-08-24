@@ -24,6 +24,18 @@ targets:
     scheme:
       testTargets:
         - JarvisMobileTests
+        - JarvisMobileUITests
+  JarvisMobileUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: JarvisMobileUITests
+    dependencies:
+      - target: JarvisMobile
+    settings:
+      base:
+        TEST_TARGET_NAME: JarvisMobile
+
   JarvisMobileTests:
     type: bundle.unit-test
     platform: iOS
