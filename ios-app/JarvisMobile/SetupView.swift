@@ -20,11 +20,11 @@ struct SetupView: View {
                         Text("GÜVENLİ BAĞLANTI MATRİSİ").font(.caption.monospaced()).tracking(2).foregroundStyle(.cyan)
                     }
                     VStack(spacing: 14) {
-                        field("HTTPS PANEL BAĞLANTISI", text: $settings.dashboardURL, contentType: .URL, secure: false)
+                        field("HTTPS PANEL BAĞLANTISI", identifier: "dashboardURL", text: $settings.dashboardURL, contentType: .URL, secure: false)
                             .textInputAutocapitalization(.never).keyboardType(.URL)
-                        field("KULLANICI ADI", text: $settings.username, contentType: .username, secure: false)
+                        field("KULLANICI ADI", identifier: "username", text: $settings.username, contentType: .username, secure: false)
                             .textInputAutocapitalization(.never)
-                        field("PAROLA", text: $settings.password, contentType: .password, secure: true)
+                        field("PAROLA", identifier: "password", text: $settings.password, contentType: .password, secure: true)
                         if let error = settings.errorMessage {
                             Text(error).font(.footnote.monospaced()).foregroundStyle(.red).frame(maxWidth: .infinity, alignment: .leading)
                         }
@@ -37,6 +37,7 @@ struct SetupView: View {
                                 .font(.headline.monospaced()).tracking(1).frame(maxWidth: .infinity).padding(.vertical, 15)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("connectButton")
                         .foregroundStyle(Color(red: 0.01, green: 0.08, blue: 0.10))
                         .background(.cyan, in: RoundedRectangle(cornerRadius: 16))
                     }
@@ -66,7 +67,7 @@ struct SetupView: View {
     }
 
     @ViewBuilder
-    private func field(_ label: String, text: Binding<String>, contentType: UITextContentType?, secure: Bool) -> some View {
+    private func field(_ label: String, identifier: String, text: Binding<String>, contentType: UITextContentType?, secure: Bool) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             Text(label).font(.caption2.monospaced()).tracking(1.5).foregroundStyle(.cyan.opacity(0.8))
             Group {
@@ -74,6 +75,7 @@ struct SetupView: View {
                 else { TextField("", text: text) }
             }
             .textContentType(contentType).font(.body.monospaced()).padding(13)
+            .accessibilityIdentifier(identifier)
             .background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(.cyan.opacity(0.22)))
         }

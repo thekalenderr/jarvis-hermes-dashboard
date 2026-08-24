@@ -13,6 +13,11 @@ final class AppSettings: ObservableObject {
     private let passwordAccount = "dashboard-basic-auth"
 
     init() {
+        if ProcessInfo.processInfo.arguments.contains("--uitesting-reset") {
+            defaults.removeObject(forKey: urlKey)
+            defaults.removeObject(forKey: userKey)
+            KeychainStore.delete(account: passwordAccount)
+        }
         let storedURL = defaults.string(forKey: urlKey) ?? ConnectionSettings.stableDashboardURL
         let migratedURL = ConnectionSettings.migratedDashboardURL(storedURL)
         dashboardURL = migratedURL
