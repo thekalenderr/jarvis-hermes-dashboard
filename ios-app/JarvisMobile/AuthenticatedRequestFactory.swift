@@ -2,7 +2,11 @@ import Foundation
 
 enum AuthenticatedRequestFactory {
     static func request(url: URL, username: String, password: String) -> URLRequest {
-        var request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        var request = URLRequest(
+            url: url,
+            cachePolicy: .reloadRevalidatingCacheData,
+            timeoutInterval: 15
+        )
         let raw = "\(username):\(password)"
         let encoded = Data(raw.utf8).base64EncodedString()
         request.setValue("Basic \(encoded)", forHTTPHeaderField: "Authorization")
