@@ -28,9 +28,17 @@ jobs:
           password = os.environ.get("JARVIS_TEST_PASSWORD", "")
           if not password:
               raise SystemExit("JARVIS_TEST_PASSWORD is missing")
-          with open("JarvisMobileUITests/TestSecrets.swift", "w", encoding="utf-8") as f:
-              f.write("enum TestSecrets {\n    static let password = " + json.dumps(password) + "\n}\n")
+          for path, enum_name in [
+              ("JarvisMobileUITests/TestSecrets.swift", "TestSecrets"),
+              ("JarvisMobileTests/UnitTestSecrets.swift", "UnitTestSecrets"),
+          ]:
+              with open(path, "w", encoding="utf-8") as f:
+                  f.write("enum " + enum_name + " {\n    static let password = " + json.dumps(password) + "\n}\n")
           PY
+      - name: Verify live Jarvis endpoint
+        env:
+          JARVIS_TEST_PASSWORD: ${{ secrets.JARVIS_TEST_PASSWORD }}
+        run: curl --fail --silent --show-error --user "jarvis:${JARVIS_TEST_PASSWORD}" https://jarvis.50-6-36-201.sslip.io/api/status >/dev/null
       - name: Generate Xcode project
         run: xcodegen generate
       - name: Select simulator

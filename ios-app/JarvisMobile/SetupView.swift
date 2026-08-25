@@ -26,7 +26,11 @@ struct SetupView: View {
                             .textInputAutocapitalization(.never)
                         field("PAROLA", identifier: "password", text: $settings.password, contentType: .password, secure: true)
                         if let error = settings.errorMessage {
-                            Text(error).font(.footnote.monospaced()).foregroundStyle(.red).frame(maxWidth: .infinity, alignment: .leading)
+                            Text(error)
+                                .font(.footnote.monospaced())
+                                .foregroundStyle(.red)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityIdentifier("settingsError")
                         }
                         Button {
                             securing = true

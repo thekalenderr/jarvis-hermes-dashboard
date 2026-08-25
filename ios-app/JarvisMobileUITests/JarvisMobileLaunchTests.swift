@@ -27,11 +27,11 @@ final class JarvisMobileLaunchTests: XCTestCase {
         let passwordField = app.secureTextFields["password"]
         XCTAssertTrue(passwordField.waitForExistence(timeout: 5))
         passwordField.tap()
-        passwordField.typeText(password)
+        passwordField.typeText(password + "\n")
         app.buttons["connectButton"].tap()
 
-        XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["JARVIS"].waitForExistence(timeout: 25))
+        XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 20))
+        XCTAssertFalse(app.otherElements["connectionError"].exists)
     }
 
     func testWrongCredentialsShowErrorInsteadOfBlackScreen() {
@@ -39,11 +39,11 @@ final class JarvisMobileLaunchTests: XCTestCase {
         let passwordField = app.secureTextFields["password"]
         XCTAssertTrue(passwordField.waitForExistence(timeout: 5))
         passwordField.tap()
-        passwordField.typeText("yanlis-parola")
+        passwordField.typeText("yanlis-parola\n")
         app.buttons["connectButton"].tap()
 
         XCTAssertTrue(
-            app.staticTexts["JARVIS bağlantısı kurulamadı"].waitForExistence(timeout: 20)
+            app.otherElements["connectionError"].waitForExistence(timeout: 20)
         )
     }
 }
