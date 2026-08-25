@@ -4,14 +4,20 @@ import XCTest
 final class LiveConnectionTests: XCTestCase {
     func testStableEndpointAcceptsCurrentMobileCredentials() async throws {
         XCTAssertFalse(UnitTestSecrets.password.isEmpty, "CI must generate UnitTestSecrets.password")
-        let base = try XCTUnwrap(URL(string: ConnectionSettings.stableDashboardURL))
-        let statusURL = try XCTUnwrap(AuthenticatedRequestFactory.statusURL(from: base))
-        let request = AuthenticatedRequestFactory.request(
-            url: statusURL,
+        let result = try await ConnectionVerifier.verify(
+            dashboardURL: try XCTUnwrap(URL(string: ConnectionSettings.stableDashboardURL)),
             username: "jarvis",
             password: UnitTestSecrets.password
         )
-        let (_, response) = try await URLSession.shared.data(for: request)
-        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
+        XCTAssertEqual(result, .authorized)
+    }
+
+    func testStableEndpointRejectsWrongPasswordWithoutHanging() async throws {
+        let result = try await ConnectionVerifier.verify(
+            dashboardURL: try XCTUnwrap(URL(string: ConnectionSettings.stableDashboardURL)),
+            username: "jarvis",
+            password: "yanlis-parola"
+        )
+        XCTAssertEqual(result, .unauthorized)
     }
 }

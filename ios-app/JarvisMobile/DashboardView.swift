@@ -78,8 +78,7 @@ struct DashboardView: View {
 
     @MainActor
     private func verifyConnection() async {
-        guard let dashboardURL = settings.url,
-              let statusURL = AuthenticatedRequestFactory.statusURL(from: dashboardURL) else {
+        guard let dashboardURL = settings.url else {
             loading = false
             error = "Panel bağlantısı geçersiz."
             return
@@ -87,25 +86,21 @@ struct DashboardView: View {
         loading = true
         error = nil
         authorized = false
-        let request = AuthenticatedRequestFactory.request(
-            url: statusURL,
-            username: settings.username,
-            password: settings.password
-        )
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse else {
-                loading = false
-                error = "Sunucudan geçerli bir HTTP yanıtı alınamadı."
-                return
-            }
-            switch http.statusCode {
-            case 200:
+            let result = try await ConnectionVerifier.verify(
+                dashboardURL: dashboardURL,
+                username: settings.username,
+                password: settings.password
+            )
+            switch result {
+            case .authorized:
                 authorized = true
-            case 401:
+            case .unauthorized:
                 error = "Kullanıcı adı veya parola yanlış. Ayarlar ekranından yeniden gir."
-            default:
-                error = "Panel HTTP \(http.statusCode) hatası döndürdü."
+            case .httpError(let status):
+                error = status == 0
+                    ? "Sunucudan geçerli bir HTTP yanıtı alınamadı."
+                    : "Panel HTTP \(status) hatası döndürdü."
             }
         } catch let connectionError {
             error = "Panel bağlantısına ulaşılamadı: \(connectionError.localizedDescription)"
