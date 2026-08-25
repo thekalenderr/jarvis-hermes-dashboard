@@ -10,13 +10,20 @@ final class AppSettings: ObservableObject {
     private let defaults = UserDefaults.standard
     private let urlKey = "jarvis.dashboard.url"
     private let userKey = "jarvis.dashboard.user"
+    private let credentialVersionKey = "jarvis.credentials.version"
+    private let currentCredentialVersion = 2
     private let passwordAccount = "dashboard-basic-auth"
 
     init() {
         if ProcessInfo.processInfo.arguments.contains("--uitesting-reset") {
             defaults.removeObject(forKey: urlKey)
             defaults.removeObject(forKey: userKey)
+            defaults.removeObject(forKey: credentialVersionKey)
             KeychainStore.delete(account: passwordAccount)
+        }
+        if defaults.integer(forKey: credentialVersionKey) != currentCredentialVersion {
+            KeychainStore.delete(account: passwordAccount)
+            defaults.set(currentCredentialVersion, forKey: credentialVersionKey)
         }
         let storedURL = defaults.string(forKey: urlKey) ?? ConnectionSettings.stableDashboardURL
         let migratedURL = ConnectionSettings.migratedDashboardURL(storedURL)
@@ -59,6 +66,7 @@ final class AppSettings: ObservableObject {
     func reset() {
         defaults.removeObject(forKey: urlKey)
         defaults.removeObject(forKey: userKey)
+        defaults.removeObject(forKey: credentialVersionKey)
         KeychainStore.delete(account: passwordAccount)
         dashboardURL = ""
         username = "jarvis"
