@@ -47,7 +47,9 @@ jobs:
           UDID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; print(next(x["udid"] for runtime in d.values() for x in runtime if "iPhone" in x["name"]))')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
       - name: Run unit tests
-        run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" CODE_SIGNING_ALLOWED=NO
+        run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileTests CODE_SIGNING_ALLOWED=NO
+      - name: Verify login screen launches
+        run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileUITests/JarvisMobileLaunchTests/testFreshInstallOpensConnectionScreen CODE_SIGNING_ALLOWED=NO
       - name: Capture updated login screen
         run: |
           xcodebuild build -project JarvisMobile.xcodeproj -scheme JarvisMobile -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -derivedDataPath build-sim CODE_SIGNING_ALLOWED=NO
