@@ -49,16 +49,18 @@ jobs:
       - name: Run unit tests
         run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileTests CODE_SIGNING_ALLOWED=NO
       - name: Verify login screen launches
-        run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileUITests/JarvisMobileLaunchTests/testFreshInstallOpensConnectionScreen CODE_SIGNING_ALLOWED=NO
-      - name: Capture updated login screen
         run: |
-          xcodebuild build -project JarvisMobile.xcodeproj -scheme JarvisMobile -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -derivedDataPath build-sim CODE_SIGNING_ALLOWED=NO
-          xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
-          xcrun simctl bootstatus "${{ steps.sim.outputs.udid }}" -b
-          xcrun simctl install "${{ steps.sim.outputs.udid }}" build-sim/Build/Products/Debug-iphonesimulator/Jarvis.app
-          xcrun simctl launch "${{ steps.sim.outputs.udid }}" tr.umitkalender.jarvis --uitesting-reset
-          sleep 4
-          xcrun simctl io "${{ steps.sim.outputs.udid }}" screenshot Jarvis-Mobile-login.png
+          rm -rf LoginTest.xcresult LoginAttachments
+          xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileUITests/JarvisMobileLaunchTests/testFreshInstallOpensConnectionScreen -resultBundlePath LoginTest.xcresult CODE_SIGNING_ALLOWED=NO
+          xcrun xcresulttool export attachments --path LoginTest.xcresult --output-path LoginAttachments
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+          images = sorted(Path("LoginAttachments").rglob("*.png"), key=lambda p: p.stat().st_size, reverse=True)
+          if not images:
+              raise SystemExit("UI test did not produce a PNG attachment")
+          shutil.copy2(images[0], "Jarvis-Mobile-login.png")
+          PY
       - name: Upload login-screen preview
         uses: actions/upload-artifact@v4
         with:

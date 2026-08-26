@@ -12,5 +12,11 @@ final class JarvisMobileLaunchTests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["JARVIS MOBILE"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["connectButton"].exists)
+        XCTAssertTrue(app.otherElements["jarvisCore"].exists)
+
+        let preview = XCTAttachment(screenshot: app.screenshot())
+        preview.name = "Jarvis-Mobile-login"
+        preview.lifetime = .keepAlways
+        add(preview)
     }
 }

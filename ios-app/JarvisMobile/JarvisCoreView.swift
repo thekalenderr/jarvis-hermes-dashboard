@@ -106,5 +106,7 @@ struct JarvisCoreView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("JARVIS yeni nesil enerji çekirdeği, sistem çevrimiçi")
         .accessibilityIdentifier("jarvisCore")
+        .onAppear { JarvisBootAudio.shared.play() }
+        .onDisappear { JarvisBootAudio.shared.stop() }
     }
 }
