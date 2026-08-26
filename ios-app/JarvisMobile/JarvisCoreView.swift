@@ -26,6 +26,12 @@ struct JarvisCoreView: View {
                         endRadius: side * 0.61
                     )
 
+                    LinearGradient(
+                        colors: [.clear, .clear, .black.opacity(0.88)],
+                        startPoint: .center,
+                        endPoint: .bottom
+                    )
+
                     ForEach(0..<4, id: \.self) { index in
                         Circle()
                             .stroke(

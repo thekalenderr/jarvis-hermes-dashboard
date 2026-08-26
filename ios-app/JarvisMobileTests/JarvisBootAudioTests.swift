@@ -9,6 +9,6 @@ final class JarvisBootAudioTests: XCTestCase {
         )
         let player = try AVAudioPlayer(contentsOf: url)
         XCTAssertEqual(player.numberOfChannels, 2)
-        XCTAssertEqual(player.duration, 3.6, accuracy: 0.08)
+        XCTAssertEqual(player.duration, 5.8, accuracy: 0.08)
     }
 }

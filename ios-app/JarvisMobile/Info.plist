@@ -8,7 +8,7 @@
   <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>1.0.4</string>
-  <key>CFBundleVersion</key><string>7</string>
+  <key>CFBundleVersion</key><string>8</string>
   <key>UILaunchScreen</key><dict><key>UIColorName</key><string></string></dict>
   <key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
   <key>NSFaceIDUsageDescription</key><string>Jarvis giriş bilgilerini korumak için Face ID kullanabilir.</string>
