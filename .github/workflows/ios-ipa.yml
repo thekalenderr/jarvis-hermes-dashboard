@@ -48,6 +48,21 @@ jobs:
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
       - name: Run unit tests
         run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" CODE_SIGNING_ALLOWED=NO
+      - name: Capture updated login screen
+        run: |
+          xcodebuild build -project JarvisMobile.xcodeproj -scheme JarvisMobile -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -derivedDataPath build-sim CODE_SIGNING_ALLOWED=NO
+          xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          xcrun simctl bootstatus "${{ steps.sim.outputs.udid }}" -b
+          xcrun simctl install "${{ steps.sim.outputs.udid }}" build-sim/Build/Products/Debug-iphonesimulator/Jarvis.app
+          xcrun simctl launch "${{ steps.sim.outputs.udid }}" tr.umitkalender.jarvis --uitesting-reset
+          sleep 4
+          xcrun simctl io "${{ steps.sim.outputs.udid }}" screenshot Jarvis-Mobile-login.png
+      - name: Upload login-screen preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jarvis-Mobile-login-preview
+          path: ios-app/Jarvis-Mobile-login.png
+          if-no-files-found: error
       - name: Build unsigned device app
         run: xcodebuild build -project JarvisMobile.xcodeproj -scheme JarvisMobile -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
       - name: Package unsigned IPA

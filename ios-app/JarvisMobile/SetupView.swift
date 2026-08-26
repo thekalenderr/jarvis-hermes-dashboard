@@ -14,7 +14,7 @@ struct SetupView: View {
 
             ScrollView {
                 VStack(spacing: 24) {
-                    reactor
+                    JarvisCoreView()
                     VStack(spacing: 8) {
                         Text("JARVIS MOBILE").font(.system(size: 30, weight: .bold, design: .rounded)).tracking(5).foregroundStyle(.white)
                         Text("GÜVENLİ BAĞLANTI MATRİSİ").font(.caption.monospaced()).tracking(2).foregroundStyle(.cyan)
@@ -56,18 +56,6 @@ struct SetupView: View {
             }
         }
         .preferredColorScheme(.dark)
-    }
-
-    private var reactor: some View {
-        ZStack {
-            ForEach(0..<3) { i in
-                Circle().stroke(i == 1 ? .orange.opacity(0.65) : .cyan.opacity(0.55), style: StrokeStyle(lineWidth: 2, dash: [CGFloat(5 + i * 3), 8]))
-                    .frame(width: CGFloat(150 + i * 34), height: CGFloat(150 + i * 34))
-                    .rotationEffect(.degrees(Double(i * 35)))
-            }
-            Circle().fill(RadialGradient(colors: [.white, .cyan, .cyan.opacity(0.08)], center: .center, startRadius: 1, endRadius: 65)).frame(width: 94, height: 94).shadow(color: .cyan, radius: 24)
-            Image(systemName: "waveform.path.ecg").font(.system(size: 34, weight: .medium)).foregroundStyle(Color(red: 0.0, green: 0.14, blue: 0.18))
-        }.frame(height: 230)
     }
 
     @ViewBuilder
