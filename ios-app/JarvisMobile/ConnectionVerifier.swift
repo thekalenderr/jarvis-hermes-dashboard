@@ -23,6 +23,9 @@ enum ConnectionVerifier {
         )
         let (_, response) = try await session.data(for: request)
         guard let http = response as? HTTPURLResponse else { return .httpError(0) }
+        if http.url?.path == "/login" {
+            return .unauthorized
+        }
         switch http.statusCode {
         case 200: return .authorized
         case 401: return .unauthorized
