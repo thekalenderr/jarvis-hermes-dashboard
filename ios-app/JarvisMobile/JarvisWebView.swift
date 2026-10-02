@@ -18,6 +18,7 @@ struct JarvisWebView: UIViewRepresentable {
         configuration.allowsAirPlayForMediaPlayback = true
         configuration.applicationNameForUserAgent = "JarvisMobile/1.1.0"
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.accessibilityIdentifier = "dashboardWebView"
         webView.navigationDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.contentInsetAdjustmentBehavior = .never

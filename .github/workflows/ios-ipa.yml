@@ -48,24 +48,32 @@ jobs:
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
       - name: Run unit tests
         run: xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileTests CODE_SIGNING_ALLOWED=NO
-      - name: Verify login screen launches
+      - name: Capture mobile visual acceptance screenshots
         run: |
-          rm -rf LoginTest.xcresult LoginAttachments
+          rm -rf LoginTest.xcresult InterfaceTest.xcresult LoginAttachments InterfaceAttachments
           xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileUITests/JarvisMobileLaunchTests/testFreshInstallOpensConnectionScreen -resultBundlePath LoginTest.xcresult CODE_SIGNING_ALLOWED=NO
           xcrun xcresulttool export attachments --path LoginTest.xcresult --output-path LoginAttachments
+          xcodebuild test -project JarvisMobile.xcodeproj -scheme JarvisMobile -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" -only-testing:JarvisMobileUITests/JarvisMobileLaunchTests/testConfiguredAppShowsInterface5 -resultBundlePath InterfaceTest.xcresult CODE_SIGNING_ALLOWED=NO
+          xcrun xcresulttool export attachments --path InterfaceTest.xcresult --output-path InterfaceAttachments
           python3 - <<'PY'
           from pathlib import Path
           import shutil
-          images = sorted(Path("LoginAttachments").rglob("*.png"), key=lambda p: p.stat().st_size, reverse=True)
-          if not images:
-              raise SystemExit("UI test did not produce a PNG attachment")
-          shutil.copy2(images[0], "Jarvis-Mobile-login.png")
+          for source, destination in [
+              ("LoginAttachments", "Jarvis-Mobile-login.png"),
+              ("InterfaceAttachments", "Jarvis-Mobile-interface-5.png"),
+          ]:
+              images = sorted(Path(source).rglob("*.png"), key=lambda p: p.stat().st_size, reverse=True)
+              if not images:
+                  raise SystemExit(f"UI test did not produce a PNG attachment in {source}")
+              shutil.copy2(images[0], destination)
           PY
-      - name: Upload login-screen preview
+      - name: Upload mobile visual acceptance screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: Jarvis-Mobile-login-preview
-          path: ios-app/Jarvis-Mobile-login.png
+          name: Jarvis-Mobile-visual-proof
+          path: |
+            ios-app/Jarvis-Mobile-login.png
+            ios-app/Jarvis-Mobile-interface-5.png
           if-no-files-found: error
       - name: Build unsigned device app
         run: xcodebuild build -project JarvisMobile.xcodeproj -scheme JarvisMobile -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
