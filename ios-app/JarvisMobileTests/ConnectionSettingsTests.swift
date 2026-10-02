@@ -10,10 +10,17 @@ final class ConnectionSettingsTests: XCTestCase {
         XCTAssertFalse(ConnectionSettings.isValidDashboardURL("http://example.com"))
     }
 
+    func testMigratesLegacyEndpointToStableDomain() {
+        XCTAssertEqual(
+            ConnectionSettings.migratedDashboardURL("https://jarvis.50-6-36-201.sslip.io"),
+            "https://jarvis.umitkalender.com"
+        )
+    }
+
     func testMigratesLegacyQuickTunnelToStableEndpoint() {
         XCTAssertEqual(
             ConnectionSettings.migratedDashboardURL("https://old-link.trycloudflare.com"),
-            "https://jarvis.50-6-36-201.sslip.io"
+            "https://jarvis.umitkalender.com"
         )
     }
 

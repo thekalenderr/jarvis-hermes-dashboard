@@ -7,10 +7,12 @@
   <key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
   <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0.4</string>
-  <key>CFBundleVersion</key><string>8</string>
+  <key>CFBundleShortVersionString</key><string>1.1.0</string>
+  <key>CFBundleVersion</key><string>9</string>
   <key>UILaunchScreen</key><dict><key>UIColorName</key><string></string></dict>
   <key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
   <key>NSFaceIDUsageDescription</key><string>Jarvis giriş bilgilerini korumak için Face ID kullanabilir.</string>
+  <key>NSMicrophoneUsageDescription</key><string>Jarvis, Türkçe sesli komutlarınızı dinleyebilmek için mikrofon erişimine ihtiyaç duyar.</string>
+  <key>NSSpeechRecognitionUsageDescription</key><string>Jarvis, sesli komutlarınızı metne dönüştürmek için konuşma tanımayı kullanır.</string>
 </dict>
 </plist>

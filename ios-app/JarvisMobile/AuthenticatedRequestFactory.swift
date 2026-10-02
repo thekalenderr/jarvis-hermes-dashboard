@@ -10,7 +10,7 @@ enum AuthenticatedRequestFactory {
         let raw = "\(username):\(password)"
         let encoded = Data(raw.utf8).base64EncodedString()
         request.setValue("Basic \(encoded)", forHTTPHeaderField: "Authorization")
-        request.setValue("JarvisMobile/1.0.3", forHTTPHeaderField: "X-Jarvis-Client")
+        request.setValue("JarvisMobile/1.1.0", forHTTPHeaderField: "X-Jarvis-Client")
         return request
     }
 

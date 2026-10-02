@@ -1,14 +1,19 @@
 import Foundation
 
 enum ConnectionSettings {
-    static let stableDashboardURL = "https://jarvis.50-6-36-201.sslip.io"
+    static let stableDashboardURL = "https://jarvis.umitkalender.com"
 
     static func migratedDashboardURL(_ raw: String) -> String {
-        guard let host = URL(string: raw)?.host?.lowercased(),
-              host.hasSuffix(".trycloudflare.com") else {
+        guard let host = URL(string: raw)?.host?.lowercased() else {
             return raw
         }
-        return stableDashboardURL
+        let legacyHosts = [
+            "jarvis.50-6-36-201.sslip.io",
+        ]
+        if host.hasSuffix(".trycloudflare.com") || legacyHosts.contains(host) {
+            return stableDashboardURL
+        }
+        return raw
     }
 
     static func normalizedURL(_ raw: String) -> URL? {

@@ -38,7 +38,7 @@ jobs:
       - name: Verify live Jarvis endpoint
         env:
           JARVIS_TEST_PASSWORD: ${{ secrets.JARVIS_TEST_PASSWORD }}
-        run: curl --fail --silent --show-error --user "jarvis:${JARVIS_TEST_PASSWORD}" https://jarvis.50-6-36-201.sslip.io/api/status >/dev/null
+        run: curl --fail --silent --show-error --user "jarvis:${JARVIS_TEST_PASSWORD}" https://jarvis.umitkalender.com/api/status >/dev/null
       - name: Generate Xcode project
         run: xcodegen generate
       - name: Select simulator

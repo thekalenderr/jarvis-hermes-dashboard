@@ -6,6 +6,8 @@ struct DashboardView: View {
     @State private var loading = true
     @State private var authorized = false
     @State private var error: String?
+    @StateObject private var notificationPermission = NotificationPermission()
+    @State private var showNotificationInfo = false
     @State private var reloadToken = 0
 
     var body: some View {
@@ -25,6 +27,15 @@ struct DashboardView: View {
 
             HStack(spacing: 9) {
                 if loading { ProgressView().tint(.cyan).padding(9) }
+                Button {
+                    Task {
+                        await notificationPermission.request()
+                        showNotificationInfo = true
+                    }
+                } label: {
+                    Image(systemName: "bell.badge.fill")
+                }
+                .accessibilityIdentifier("notificationPermissionButton")
                 Button {
                     authorized = false
                     reloadToken += 1
@@ -71,6 +82,11 @@ struct DashboardView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .alert("Jarvis Bildirimleri", isPresented: $showNotificationInfo) {
+            Button("Tamam", role: .cancel) {}
+        } message: {
+            Text(notificationPermission.statusText)
+        }
         .task(id: reloadToken) {
             await verifyConnection()
         }
